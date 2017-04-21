@@ -1,0 +1,177 @@
+---
+title: "The Relationship between Body Size and Lifespan"
+author: "Juan Vazquez"
+date: 2017-04-21
+output: html_document
+---
+
+## Introduction
+
+While aging is an inevitable process for most species, there is an incredible diversity
+of lifespans throughout the Tree of Life, ranging from a few days to [several millenia][https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4133289/]. For researchers interested
+in the fundamental biology behind ageing, seeing what aspects of an organism's biology
+correlate to lifespan is an important first step on the path to finding concrete explanations 
+behind their longevity.  
+For example, in 1975, Dr. Richard Peto published [a paper][https://www.ncbi.nlm.nih.gov/pubmed/1212409]
+where he established that the different sizes and lifespans of humans and mice didn't really 
+relate to their respective cancer rates. This was described as Peto's Paradox, because 
+the expectation was originally that over a lifetime, every cell will accumulate mutations that 
+could eventually cause it to become cancerous; and if an animal had more cells, then this 
+lifetime risk of cancer would only increase further. In fact, it turns out that there 
+is no relationship between body size, lifespan, and cancer, which is the fact that 
+underlies the focus of my own research!  
+As we will explore in this section, this paradox is further complicated by another 
+unexpected relationship: animals that are larger tend to also live longer.
+
+## The Data
+
+For this analysis, we will be using the [AnAge database][] of ageing and life history 
+in animals. This database has entries for over 4200 species of animals 
+(also 2 plants and 3 fungi) with data like max lifespan, growth rates and weights at
+different life stages, descriptions, and metabolism, amongst other things.  
+
+First, let's take a look at the data itself:
+
+```{r packages, message=FALSE}
+# These are the packages we will be using in this analysis
+require(dplyr)
+require(ggplot2)
+require(plotly)
+```
+
+```{r load_data, message=FALSE}
+# Read the data into a dataframe:
+anage <- read.delim('../data/anage_data.txt',as.is = T)
+# Look at the data using str()
+str(anage)
+```
+
+Using str() is a useful way of quickly seeing the different columns of data 
+and the type of data in each. Of interest are the taxonomic columns, the  
+Adult Weight column, and the Maximum Lifespan column.
+You can also try use head() to look at the first few rows:  
+
+```{r see_data}
+head(anage)
+```
+
+As you can see, head is less legible in dataframes with many columns, so I usually stick to str().  
+  
+Let's try graphing now. First, we will graph all the species; we 
+will graph the adult weights versus their maximum lifespan, and color the 
+datapoints by their Phylum:  
+
+
+```{r plot_all}
+# Create the basic plot
+p_all <- ggplot(
+  data = anage,
+  aes(Adult.weight..g., Maximum.longevity..yrs., color=Phylum)
+  )
+# Add the features
+p_all <- p_all + 
+  geom_point(aes(text = paste(Common.name)), size=0.5) + 
+  scale_x_log10() + 
+  ggtitle('AnAge Species Adult Weight vs Lifespan') + 
+  xlab('Adult Weight (log(g))') + 
+  ylab('Maximum Longevity (yrs)')
+# Output the interactive plot
+ggplotly(p_all)
+```
+
+*(Note that we scaled the x-axis using a log-scale; this is done because we want 
+to highlight orders-of-magnitude changes over small-scale change - in other words,
+we don't care so much about the difference between 1-2 grams and 100-200 grams as
+much as a change between 1-10 grams and 100-1000 grams.)*  
+
+As you can see, the graph looks a little off! It seems like a straight line, 
+but that's because the Y-axis is extremely shifted; there's no point anywhere
+near that high. We can look back at the data using dplyr to try to figure 
+out why the plot was set so high:  
+
+```{r get_outliers}
+# Filter anage based on the weird characteristics:
+anage %>% filter(Maximum.longevity..yrs. >= 1000)
+```
+Remember how I said that some animals live for millenia? Behold the humble sponge, 
+and specifically the Hexactinellid sponge, which apparently lives for 15,000 years! 
+Its worth noting the column "Data.quality" here; there's some skepticism in the 
+literature as to whether or not this is estimate is real, since its so incredible. 
+Also of note is why these points don't appear on the graph - none of them have 
+data for adult weight! Let's try again, but this time we'll filter out species
+without entries for weight or lifespan:  
+
+
+```{r plot_all2}
+# Filter out missing values:
+anage %>% filter(!is.na(Adult.weight..g.), !is.na(Maximum.longevity..yrs.)) -> anage_filtered
+# Create the basic plot
+p_all2 <- ggplot(
+  data = anage_filtered,
+  aes(Adult.weight..g., Maximum.longevity..yrs., color=Phylum)
+  )
+# Add the features
+p_all2 <- p_all2 + 
+  geom_point(aes(text = paste(Common.name)), size=0.5) + 
+  scale_x_log10() + 
+  ggtitle('AnAge Species Adult Weight vs Lifespan') + 
+  xlab('Adult Weight (log(g))') + 
+  ylab('Maximum Longevity (yrs)')
+# Output the interactive plot
+ggplotly(p_all2)
+```
+
+Next, let us graph all chordates:
+
+```{r plot_chordates}
+anage %>% filter(Phylum == 'Chordata') -> anage_chordates
+p_chordates <- ggplot(
+  data = anage_chordates,
+  aes(Adult.weight..g., Maximum.longevity..yrs., color=Class)
+  )
+p_chordates <- p_chordates + geom_point(aes(text = paste(Common.name)), size=0.5) + scale_x_log10() + ggtitle('AnAge Species Adult Weight vs Lifespan') + xlab('Adult Weight (log(g))') + ylab('Maximum Longevity (yrs)')
+ggplotly(p_chordates)
+
+```
+
+Finally, let us look at bats:
+
+```{r plot_bats}
+
+anage %>% filter(Order=='Chiroptera') -> anage_chiroptera
+str(anage_chiroptera)
+
+p_bats <- ggplot(
+  data = anage_chiroptera,
+  aes(Adult.weight..g., Maximum.longevity..yrs., color=Family)
+)
+p_bats <- p_bats + geom_point(aes(text = paste(Common.name))) + scale_x_log10() + ggtitle('Chiroptera Adult Weight vs Lifespan') + xlab('Adult Weight (log(g))') + ylab('Maximum Longevity (yrs)')
+ggplotly(p_bats)
+```
+
+
+## Session information
+
+<!-- Insert the session information into the document -->
+```{r session-info}
+```
+<!-- The file analysis/chunks.R contains chunks that define default settings
+shared across the workflowr files. -->
+```{r read-chunk, include=FALSE, cache=FALSE}
+knitr::read_chunk("chunks.R")
+```
+
+<!-- Update knitr chunk options -->
+```{r knitr-opts-chunk, include=FALSE}
+```
+
+<!-- Insert the date the file was last updated -->
+```{r last-updated, echo=FALSE, results='asis'}
+```
+
+<!-- Insert the code version (Git commit SHA1) if Git repository exists and R
+ package git2r is installed -->
+```{r code-version, echo=FALSE, results='asis'}
+```
+
+[AnAge database]: http://genomics.senescence.info/species/

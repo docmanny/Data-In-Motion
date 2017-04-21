@@ -5,4 +5,19 @@ output:
     toc: false
 ---
 
-Describe your project.
+# An In-Depth Look at Peto's Paradox using the AnAge database
+
+Using the [AnAge][] database contained within the Human Aging and Genomics Resources at [senescence.info][], we visit Peto's Paradox in an interactive and visual fashion.
+
+Brought to you by:
+
+- [ggplot2][]  
+- [plotly][]  
+- [workflowr][]  
+
+
+[AnAge]: http://genomics.senescence.info/species/
+[senescence.info]: http://www.senescence.info
+[ggplot2]: http://ggplot2.org/
+[plotly]: https://plot.ly/r/
+[workflowr]: https://github.com/jdblischak/workflowr

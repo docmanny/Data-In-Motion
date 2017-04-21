@@ -1,9 +1,9 @@
-name: DataInMotion
+name: AnAge
 output_dir: "../docs"
 include: [".nojekyll"]
 exclude: ["include"]
 navbar:
-  title: DataInMotion
+  title: AnAge
   left:
     - text: "Home"
       href: index.html

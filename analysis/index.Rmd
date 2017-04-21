@@ -1,15 +1,38 @@
 ---
-title: "Home"
+title: "Data in Motion"
+subtitle: "A living, interactive view of real-life data"
 output:
   html_document:
-    toc: false
+    toc: True
 ---
+## Introduction:  
 
-The goal of this new template is to simplify the setup and maintenance of a research website.
-Specifically,
+The path of a scientist generates tons of data that sometimes don't get the
+attention they deserve; even when the data is analyzed, it frequently gets put
+in a static graph that limits the depth of the story that it can tell. This
+repository holds a workflowr-powered website that presents data I either sourced
+or generated in my work in an interactive fashion. The goal is to provide a
+behind-the-scene look at the data analysis involved in science, and make all of
+my data more accessible to all audiences.  
 
-*  Easier to build and extend the website using the new tools in the [rmarkdown][] package and [latest RStudio release][rstudio]
-*  Easier to deploy the website with Git and GitHub by only using one branch
+## The Data in Motion:
 
-[rmarkdown]: http://rmarkdown.rstudio.com/rmarkdown_websites.htm
-[rstudio]: https://www.rstudio.com/products/rstudio/download/preview/
+- [The Relationship between Body Size and Lifespan][]:  
+In this section, we parse through the AnAge database of animals and their lifespans 
+to explore the correlation between body size and maximum lifespan. 
+
+
+
+## More Info:  
+
+Brought to you using:
+- [dplyr][] - Used to analyze the data.
+- [ggplot2][] - Used to design the graphs.
+- [plotly][] - Creates the interactive layer on the ggplot2 graphs.
+- [workflowr][] - Provides the front-end to this website.
+
+[The Relationship between Body Size and Lifespan]
+[dplyr]: http://dplyr.tidyverse.org/
+[ggplot2]: http://ggplot2.org/
+[plotly]: https://plot.ly/r/
+[workflowr]: https://github.com/jdblischak/workflowr
