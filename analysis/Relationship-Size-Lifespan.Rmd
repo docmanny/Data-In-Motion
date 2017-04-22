@@ -8,11 +8,11 @@ output: html_document
 ## Introduction
 
 While aging is an inevitable process for most species, there is an incredible diversity
-of lifespans throughout the Tree of Life, ranging from a few days to [several millenia][https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4133289/]. For researchers interested
+of lifespans throughout the Tree of Life, ranging from a few days to [several millenia][]. For researchers interested
 in the fundamental biology behind ageing, seeing what aspects of an organism's biology
 correlate to lifespan is an important first step on the path to finding concrete explanations 
 behind their longevity.  
-For example, in 1975, Dr. Richard Peto published [a paper][https://www.ncbi.nlm.nih.gov/pubmed/1212409]
+For example, in 1975, Dr. Richard Peto published [a paper][]
 where he established that the different sizes and lifespans of humans and mice didn't really 
 relate to their respective cancer rates. This was described as Peto's Paradox, because 
 the expectation was originally that over a lifetime, every cell will accumulate mutations that 
@@ -175,4 +175,7 @@ knitr::read_chunk("chunks.R")
 ```{r code-version, echo=FALSE, results='asis'}
 ```
 
+
+[several millenia]: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4133289/
+[a paper]: https://www.ncbi.nlm.nih.gov/pubmed/1212409
 [AnAge database]: http://genomics.senescence.info/species/
