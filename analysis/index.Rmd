@@ -31,7 +31,7 @@ Brought to you using:
 - [plotly][] - Creates the interactive layer on the ggplot2 graphs.
 - [workflowr][] - Provides the front-end to this website.
 
-[The Relationship between Body Size and Lifespan]
+[The Relationship between Body Size and Lifespan]: ./Relationship-Size-Lifespan.html
 [dplyr]: http://dplyr.tidyverse.org/
 [ggplot2]: http://ggplot2.org/
 [plotly]: https://plot.ly/r/
