@@ -23,7 +23,7 @@ underlies the focus of my own research!
 As we will explore in this section, this paradox is further complicated by another 
 unexpected relationship: animals that are larger tend to also live longer.
 
-## The Data
+## Graphing the Data
 
 For this analysis, we will be using the [AnAge database][] of ageing and life history 
 in animals. This database has entries for over 4200 species of animals 
@@ -57,6 +57,8 @@ head(anage)
 
 As you can see, head is less legible in dataframes with many columns, so I usually stick to str().  
   
+### All species 
+
 Let's try graphing now. First, we will graph all the species; we 
 will graph the adult weights versus their maximum lifespan, and color the 
 datapoints by their Phylum:  
@@ -114,34 +116,120 @@ p_all2 <- ggplot(
 p_all2 <- p_all2 + 
   geom_point(aes(text = paste(Common.name)), size=0.5) + 
   scale_x_log10() + 
-  ggtitle('AnAge Species Adult Weight vs Lifespan') + 
+  ggtitle('AnAge Species Adult Weight vs Lifespan, Filtered') + 
   xlab('Adult Weight (log(g))') + 
   ylab('Maximum Longevity (yrs)')
 # Output the interactive plot
 ggplotly(p_all2)
 ```
 
-Interestingly, it seems like all non-chordates lack one or the other datapoint... 
+Interestingly, it seems like all non-chordates lack one or the other datapoint...  
+
+### Chordates 
 Moving on, let us graph the chordates, and now color by class:  
 
 ```{r plot_chordates}
+# Filter the database so that we only have species from Chordata,
+#  with both adult weight and maximum longevity.
 anage %>% filter(Phylum == 'Chordata',!is.na(Adult.weight..g.), !is.na(Maximum.longevity..yrs.)) -> anage_chordates
+# Basic Graph
 p_chordates <- ggplot(
   data = anage_chordates,
   aes(Adult.weight..g., Maximum.longevity..yrs., color=Class)
   )
-p_chordates <- p_chordates + geom_point(aes(text = paste(Common.name)), size=0.5) + scale_x_log10() + ggtitle('AnAge Species Adult Weight vs Lifespan') + xlab('Adult Weight (log(g))') + ylab('Maximum Longevity (yrs)')
+# Fun stuff
+p_chordates <- p_chordates + 
+  geom_point(aes(text = paste(Common.name)), size=0.5) + 
+  scale_x_log10() + 
+  ggtitle('Chordates Adult Weight vs Lifespan') + 
+  xlab('Adult Weight (log(g))') + 
+  ylab('Maximum Longevity (yrs)')
+# And plot
 ggplotly(p_chordates)
 
 ```
+
+Overall, there seems to be a positive trend; we can already see the outliers
+that are extremely long-lived for their size by hovering over the points 
+to read the common names. As you can see, the longest lived animals by far 
+are the Rougheye Rockfish, at 205 years; and the Bowhead Whale, at 211 years.
+A little further down the y axis, we see many more fish, humans (!), and some more whales. 
+Now we can look further at the data by clicking on the classes on the legend 
+to hide those points.  
+  
+Hide everything so that we can only see Actinopterygii, which is the class of 
+ray-finned fish. This group accounts for almost all of the living fish species, and
+makes up half of all living vertebrates. As you can see, for any given weight 
+of fish, you could probably find many short lived fish and a couple of really 
+long-lived fish. In contrast, if you look only at Amphibians, you can see that
+based on our data they pretty much cluster tightly with the exception of the
+Olm, which lives a very long time for its size.  
+  
+Looking at Aves, or birds, we can see that there's actually a fairly clear 
+positive relationship between size and longevity, with most of the density 
+in the plot at the small-and-short-lived end of the tail, fanning out as you 
+get larger and larger. Were I to venture a guess, this fan-shaped pattern 
+is suggestive of the two sides of Peto's Paradox: some of these birds seem to 
+live longer as per the pattern, but some of them seem to be shorter-lived than
+one would expect. One thing that caught my attention was how emus and cassowaries,
+which are sister species, are all shorter-lived than the ostrich, which is at 
+the root of the Ratite clade. While this alone means nothing, its small things 
+of note like this that could lead to the start of some really interesting work!  
+
+### Mammals
+
+Now let us move on to mammals:  
+
+```{r plot_mammals}
+# Select all mammals with values for size and lifespan
+anage %>% filter(Class == 'Mammalia',!is.na(Adult.weight..g.), !is.na(Maximum.longevity..yrs.)) -> anage_mammalia
+
+# Graph!
+p_mammalia <- ggplot(
+  data = anage_mammalia,
+  aes(Adult.weight..g., Maximum.longevity..yrs., color=Order)
+)
+p_mammalia <- p_mammalia + 
+  geom_point(aes(text = paste(Common.name)), size=0.5) + 
+  scale_x_log10() + 
+  ggtitle('Mammals Adult Weight vs Lifespan') + 
+  xlab('Adult Weight (log(g))') + 
+  ylab('Maximum Longevity (yrs)')
+ggplotly(p_mammalia)
+```
+
+Here we see the beautiful correlation between mammalian weight and lifespan! 
+To really get an in-depth look at things, let's add on a few more things:
+
+- First, let's log-transform the y axis as well;  
+- Second, we'll use the 'lm' method of geom_smooth() to add a regression line;
+- Finally, we'll add some confidence intervals.
+
+And so we get this:  
+
+```{r plot_mammals2}
+# The hard work's done so let's just add on the new things
+p_mammalia2 <- p_mammalia + 
+  scale_y_log10() +
+  geom_smooth(method='lm', aes(Adult.weight..g., Maximum.longevity..yrs.), inherit.aes = FALSE)
+  
+ggplotly(p_mammalia2)
+```
+
+Now that we can see the regression line, we can also look to see families that are above the trend line, versus those that are below it. 
+
+
+
+### Bats
 
 Finally, let us look at bats:
 
 ```{r plot_bats}
 
-anage %>% filter(Order=='Chiroptera') -> anage_chiroptera
+anage %>% filter(Order=='Chiroptera',!is.na(Adult.weight..g.), !is.na(Maximum.longevity..yrs.)) -> anage_chiroptera
 str(anage_chiroptera)
 
+# Once more, with vigor!
 p_bats <- ggplot(
   data = anage_chiroptera,
   aes(Adult.weight..g., Maximum.longevity..yrs., color=Family)
