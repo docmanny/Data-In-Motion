@@ -17,7 +17,7 @@ my data more accessible to all audiences.
 
 ## The Data in Motion:
 
-- [The Relationship between Body Size and Lifespan][]:  
+### [The Relationship between Body Size and Lifespan][]:  
 In this section, we parse through the AnAge database of animals and their lifespans 
 to explore the correlation between body size and maximum lifespan. 
 

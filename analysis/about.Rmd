@@ -4,20 +4,36 @@ output:
   html_document:
     toc: false
 ---
+<!-- The file analysis/chunks.R contains chunks that define default settings
+shared across the workflowr files. -->
+```{r read-chunk, include=FALSE, cache=FALSE}
+knitr::read_chunk("chunks.R")
+```
+<!-- Update knitr chunk options -->
+```{r knitr-opts-chunk, include=FALSE}
+```
 
-# An In-Depth Look at Peto's Paradox using the AnAge database
+##Session information
+<!-- Insert the session information into the document -->
+```{r session-info}
+```
 
-Using the [AnAge][] database contained within the Human Aging and Genomics Resources at [senescence.info][], we visit Peto's Paradox in an interactive and visual fashion.
+##Last Update
+<!-- Insert the date the file was last updated -->
+```{r last-updated, echo=FALSE, results='asis'}
+```
+<!-- Insert the code version (Git commit SHA1) if Git repository exists and R
+ package git2r is installed -->
+```{r code-version, echo=FALSE, results='asis'}
+```
 
-Brought to you by:
+##Packages
 
 - [ggplot2][]  
 - [plotly][]  
 - [workflowr][]  
 
 
-[AnAge]: http://genomics.senescence.info/species/
-[senescence.info]: http://www.senescence.info
 [ggplot2]: http://ggplot2.org/
 [plotly]: https://plot.ly/r/
 [workflowr]: https://github.com/jdblischak/workflowr

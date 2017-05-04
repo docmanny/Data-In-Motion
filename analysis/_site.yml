@@ -1,9 +1,9 @@
-name: AnAge
+name: "Data in Motion"
 output_dir: "../docs"
 include: [".nojekyll"]
 exclude: ["include"]
 navbar:
-  title: AnAge
+  title: "Data in Motion"
   left:
     - text: "Home"
       href: index.html
@@ -11,9 +11,11 @@ navbar:
       href: about.html
     - text: "License"
       href: license.html
+    - text: "Vazquez.Bio"
+      href: https://www.vazquez.bio
   right:
     - icon: fa-github
-      href: https://github.com/jdblischak/workflowr
+      href: https://github.com/docmanny/Data-In-Motion
 output:
   html_document:
     toc: true
